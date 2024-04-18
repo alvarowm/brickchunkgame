@@ -107,7 +107,7 @@ fn debug(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("cf = {}", cpu.carry_flag);
     println!("timer_enabled = {}", cpu.timer_enabled);
 
-    for x in 176..ram.len()  {
+    for x in 176..256  {
         print!("{} ", x);
         if ram[x].bit(0) { print!("[]") } else { print!("x") };
         if ram[x].bit(1) { print!("[]") } else { print!("x") };
