@@ -1,0 +1,15 @@
+[package]
+name = "brickchunkgame"
+version = "0.0.1"
+authors = ["Alvaro <alvaromello@PREFEITURA.SP.GOV.BR>"]
+edition = "2021"
+readme = "README.md"
+repository = "https://github.com/alvarowm/brickchunkgame"
+description = "Emulador De Brick Game (HT1130 - 4-bit Microcontrolador)."
+license = "MIT"
+[dependencies]
+java-properties = "2.0.0"
+lazy_static = "1.4.0"
+bit = "0.1.1"
+crossterm = "0.27.0"
+ratatui = "0.25.0"
