@@ -5,6 +5,7 @@ use std::thread::sleep;
 use std::time::{Duration, Instant};
 use crossterm::event::KeyEvent;
 use brickchunkgame::cpu::CPU;
+use crate::properties_reader::STATIC_CONFIG;
 
 fn main() {
     show_logo_version();
@@ -28,7 +29,7 @@ fn main() {
         r3: 0,
         r4: 0,
         acc: 0,
-        timer_counter: 0,
+        timer_counter: 1,
         carry_flag: false,
         pa0: false,
         pa1: false,
@@ -68,13 +69,15 @@ fn main() {
     //main loop
     loop {
         timer_counter +=1;
-        if timer_counter == timer_div {
+        if timer_counter == 3 {
             timer::tick(& mut cpu,rom);
             timer_counter = 0;
         }
         cpu::check_interrupts(& mut cpu, rom, &kb_mutex);
         cpu::exec_instruction(&mut cpu, &mut ram, rom);
-        lcd::show(ram);
+        if STATIC_CONFIG.lock().unwrap().get("lcd").unwrap() == "true"{
+            lcd::show(ram);
+        }
         sleep(next_time - Instant::now());
         next_time += interval;
     }

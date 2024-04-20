@@ -6,8 +6,8 @@ use crossterm::event::{KeyEvent};
 use crate::properties_reader::STATIC_CONFIG;
 
 pub struct CPU {
-    //PC usa somente 12 bits (4096 enderecos)
-    //Program Counter
+    //pC usa somente 12 bits (4096 enderecos)
+    //program Counter
     pub  pc:u16,
     //Interrupt mode
     pub ei:bool,
@@ -23,7 +23,7 @@ pub struct CPU {
     pub acc:u8,
     pub timer_counter:u8,
     pub carry_flag:bool,
-    //PA
+    //pA
     pub pa0:bool,
     pub pa1:bool,
     pub pa2:bool,
@@ -86,6 +86,7 @@ fn debug(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("r1 = {}", cpu.r1);
     println!("r2 = {}", cpu.r2);
     println!("r3 = {}", cpu.r3);
+    println!("r4 = {}", cpu.r4);
     println!("pa0 = {}", cpu.pa0);
     println!("pa1 = {}", cpu.pa1);
     println!("pa2 = {}", cpu.pa2);
@@ -107,16 +108,18 @@ fn debug(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("cf = {}", cpu.carry_flag);
     println!("timer_enabled = {}", cpu.timer_enabled);
 
-    for x in 176..256  {
-        print!("{} ", x);
-        if ram[x].bit(0) { print!("[]") } else { print!("x") };
-        if ram[x].bit(1) { print!("[]") } else { print!("x") };
-        if ram[x].bit(2) { print!("[]") } else { print!("x") };
-        if ram[x].bit(3) { print!("[]") } else { print!("x") };
-        if ram[x].bit(4) { print!("[]") } else { print!("x") };
-        if ram[x].bit(5) { print!("[]") } else { print!("x") };
-        if ram[x].bit(6) { print!("[]") } else { print!("x") };
-        if ram[x].bit(7) { println!("[]") } else { println!("x") };
+    if STATIC_CONFIG.lock().unwrap().get("debug_memory").unwrap() == "true"{
+        for x in 176..256  {
+            print!("{} ", x);
+            if ram[x].bit(0) { print!("[]") } else { print!("x") };
+            if ram[x].bit(1) { print!("[]") } else { print!("x") };
+            if ram[x].bit(2) { print!("[]") } else { print!("x") };
+            if ram[x].bit(3) { print!("[]") } else { print!("x") };
+            if ram[x].bit(4) { print!("[]") } else { print!("x") };
+            if ram[x].bit(5) { print!("[]") } else { print!("x") };
+            if ram[x].bit(6) { print!("[]") } else { print!("x") };
+            if ram[x].bit(7) { println!("[]") } else { println!("x") };
+        }
     }
 
     println!("----------------------------");
@@ -306,7 +309,7 @@ pub fn halt_0011011100111110 (){
 }
 
 //IN A,Pi
-//PM 0 0 1 1 0 0 1 0
+//pM 0 0 1 1 0 0 1 0
 pub fn in_00110010 (cpu: &mut CPU){
     println!("IN A,Pi");
     cpu.pc+=1;
@@ -320,7 +323,7 @@ pub fn in_00110010 (cpu: &mut CPU){
 }
 
 //IN A,Pi
-//PS 0 0 1 1 0 0 1 1
+//pS 0 0 1 1 0 0 1 1
 pub fn in_00110011 (cpu: &mut CPU){
     println!("IN A,Pi");
     cpu.pc+=1;
@@ -333,7 +336,7 @@ pub fn in_00110011 (cpu: &mut CPU){
 }
 
 //IN A,Pi
-//PP 0 0 1 1 0 1 0 0
+//pP 0 0 1 1 0 1 0 0
 pub fn in_00110100 (cpu: &mut CPU){
     println!("IN A,Pi");
     cpu.pc+=1;
@@ -655,15 +658,15 @@ pub fn mov_0101dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
     println!("MOV R1R0,XXH");
     cpu.pc+=2;
 
-    cpu.r1.set_bit(0, byte1.bit(0));
-    cpu.r1.set_bit(1, byte1.bit(1));
-    cpu.r1.set_bit(2, byte1.bit(2));
-    cpu.r1.set_bit(3, byte1.bit(3));
+    cpu.r0.set_bit(0, byte1.bit(0));
+    cpu.r0.set_bit(1, byte1.bit(1));
+    cpu.r0.set_bit(2, byte1.bit(2));
+    cpu.r0.set_bit(3, byte1.bit(3));
 
-    cpu.r0.set_bit(0, byte2.bit(0));
-    cpu.r0.set_bit(1, byte2.bit(1));
-    cpu.r0.set_bit(2, byte2.bit(2));
-    cpu.r0.set_bit(3, byte2.bit(3));
+    cpu.r1.set_bit(0, byte2.bit(0));
+    cpu.r1.set_bit(1, byte2.bit(1));
+    cpu.r1.set_bit(2, byte2.bit(2));
+    cpu.r1.set_bit(3, byte2.bit(3));
 }
 
 //MOV R3R2,XXH
@@ -671,15 +674,15 @@ pub fn mov_0110dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
     println!("MOV R3R2,XXH");
     cpu.pc+=2;
 
-    cpu.r3.set_bit(0, byte1.bit(0));
-    cpu.r3.set_bit(1, byte1.bit(1));
-    cpu.r3.set_bit(2, byte1.bit(2));
-    cpu.r3.set_bit(3, byte1.bit(3));
+    cpu.r2.set_bit(0, byte1.bit(0));
+    cpu.r2.set_bit(1, byte1.bit(1));
+    cpu.r2.set_bit(2, byte1.bit(2));
+    cpu.r2.set_bit(3, byte1.bit(3));
 
-    cpu.r2.set_bit(0, byte2.bit(0));
-    cpu.r2.set_bit(1, byte2.bit(1));
-    cpu.r2.set_bit(2, byte2.bit(2));
-    cpu.r2.set_bit(3, byte2.bit(3));
+    cpu.r3.set_bit(0, byte2.bit(0));
+    cpu.r3.set_bit(1, byte2.bit(1));
+    cpu.r3.set_bit(2, byte2.bit(2));
+    cpu.r3.set_bit(3, byte2.bit(3));
 }
 
 //MOV r4,XH
@@ -956,13 +959,36 @@ pub fn read_01001101(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 //RET
 pub fn ret_00101110(cpu: &mut CPU) {
     println!("RET");
-    cpu.pc.set_bit_range(0..11, cpu.stack_register.bit_range(0..11));
+    cpu.pc.set_bit(0, cpu.stack_register.bit(0));
+    cpu.pc.set_bit(1, cpu.stack_register.bit(1));
+    cpu.pc.set_bit(2, cpu.stack_register.bit(2));
+    cpu.pc.set_bit(3, cpu.stack_register.bit(3));
+    cpu.pc.set_bit(4, cpu.stack_register.bit(4));
+    cpu.pc.set_bit(5, cpu.stack_register.bit(5));
+    cpu.pc.set_bit(6, cpu.stack_register.bit(6));
+    cpu.pc.set_bit(7, cpu.stack_register.bit(7));
+    cpu.pc.set_bit(8, cpu.stack_register.bit(8));
+    cpu.pc.set_bit(9, cpu.stack_register.bit(9));
+    cpu.pc.set_bit(10, cpu.stack_register.bit(10));
+    cpu.pc.set_bit(11, cpu.stack_register.bit(11));
+
 }
 
 //RETI
 pub fn reti_00101111(cpu: &mut CPU) {
     println!("RETI");
-    cpu.pc.set_bit_range(0..11, cpu.stack_register.bit_range(0..11));
+    cpu.pc.set_bit(0, cpu.stack_register.bit(0));
+    cpu.pc.set_bit(1, cpu.stack_register.bit(1));
+    cpu.pc.set_bit(2, cpu.stack_register.bit(2));
+    cpu.pc.set_bit(3, cpu.stack_register.bit(3));
+    cpu.pc.set_bit(4, cpu.stack_register.bit(4));
+    cpu.pc.set_bit(5, cpu.stack_register.bit(5));
+    cpu.pc.set_bit(6, cpu.stack_register.bit(6));
+    cpu.pc.set_bit(7, cpu.stack_register.bit(7));
+    cpu.pc.set_bit(8, cpu.stack_register.bit(8));
+    cpu.pc.set_bit(9, cpu.stack_register.bit(9));
+    cpu.pc.set_bit(10, cpu.stack_register.bit(10));
+    cpu.pc.set_bit(11, cpu.stack_register.bit(11));
     cpu.carry_flag = cpu.pc.bit(12);
 }
 

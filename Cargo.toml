@@ -10,6 +10,5 @@ license = "MIT"
 [dependencies]
 java-properties = "2.0.0"
 lazy_static = "1.4.0"
-bit = "0.1.1"
+bit = "0.1.0"
 crossterm = "0.27.0"
-ratatui = "0.25.0"
