@@ -6,7 +6,7 @@ use crossterm::event::{KeyEvent};
 use crate::properties_reader::STATIC_CONFIG;
 
 pub struct CPU {
-    //pC usa somente 12 bits (4096 enderecos)
+    //PC usa somente 12 bits (4096 enderecos)
     //program Counter
     pub  pc:u16,
     //Interrupt mode
@@ -971,6 +971,7 @@ pub fn ret_00101110(cpu: &mut CPU) {
     cpu.pc.set_bit(9, cpu.stack_register.bit(9));
     cpu.pc.set_bit(10, cpu.stack_register.bit(10));
     cpu.pc.set_bit(11, cpu.stack_register.bit(11));
+    cpu.stack_register = 0;
 
 }
 
@@ -990,6 +991,7 @@ pub fn reti_00101111(cpu: &mut CPU) {
     cpu.pc.set_bit(10, cpu.stack_register.bit(10));
     cpu.pc.set_bit(11, cpu.stack_register.bit(11));
     cpu.carry_flag = cpu.pc.bit(12);
+    cpu.stack_register = 0;
 }
 
 //RL A
