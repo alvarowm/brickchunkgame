@@ -9,8 +9,7 @@ pub fn show(ram: [u8; 256]){
     let lcd = map_ram_to_lcd(ram);
     for i in 0..lcd.rowsxcolumns.len() {
         for j in 0..lcd.rowsxcolumns[i].len(){
-            //let _ = print!("{}", if lcd.rowsxcolumns[i][j] {"■"} else {"□"});
-            let _ = print!("{}", if lcd.rowsxcolumns[i][j] {"[]"} else {"X"});
+            let _ = print!("{}", if lcd.rowsxcolumns[i][j] {"■"} else {"□"});
         }
        println!();
     }

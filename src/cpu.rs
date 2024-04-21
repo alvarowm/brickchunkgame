@@ -858,7 +858,7 @@ pub fn read_01001100 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("READ R4A");
     let curent_page:u8 = (cpu.pc / 256) as u8;
     let mut rom_address:u16 = 0 ;
-    cpu.pc+=2;
+    cpu.pc+=1;
 
     rom_address.set_bit(0,ram[((cpu.r1 << 4) + cpu.r0) as usize].bit(0));
     rom_address.set_bit(1,ram[((cpu.r1 << 4) + cpu.r0) as usize].bit(1));
@@ -891,7 +891,7 @@ pub fn read_01001100 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 //READF MR0A
 pub fn read_01001111(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("READF MR0A");
-    cpu.pc+=2;
+    cpu.pc+=1;
     let mut rom_address:u16 = 0 ;
 
     rom_address.set_bit(0,cpu.r4.bit(0));
@@ -925,7 +925,7 @@ pub fn read_01001111(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 //READF R4A
 pub fn read_01001101(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("READF R4A");
-    cpu.pc+=2;
+    cpu.pc+=1;
     let mut rom_address:u16 = 0 ;
 
     rom_address.set_bit(0,ram[((cpu.r1 << 4) + cpu.r0) as usize].bit(0));
