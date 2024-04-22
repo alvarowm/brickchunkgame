@@ -65,13 +65,48 @@ pub fn res (cpu: &mut CPU){
 
 pub fn exec_instruction (cpu: &mut CPU, ram: &mut[u8; 256], rom: [u8; 4096]){
     if STATIC_CONFIG.lock().unwrap().get("debug").unwrap() == "true"{
-        debug(cpu,ram,rom);
+        debug(cpu,rom);
+    }
+
+    if STATIC_CONFIG.lock().unwrap().get("debug_ram").unwrap() == "true"{
+        debug_ram(ram);
+    }
+
+    if STATIC_CONFIG.lock().unwrap().get("debug_vram").unwrap() == "true"{
+        debug_vram(ram);
     }
     instruction_decoder::execute_correct_instruction(cpu, ram, rom);
 }
 
-#[allow(dead_code)]
-fn debug(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
+fn debug_ram (ram: &mut[u8; 256]){
+        for x in 1..256  {
+            print!("{} ", x);
+            if ram[x].bit(0) { print!("[]") } else { print!("x") };
+            if ram[x].bit(1) { print!("[]") } else { print!("x") };
+            if ram[x].bit(2) { print!("[]") } else { print!("x") };
+            if ram[x].bit(3) { print!("[]") } else { print!("x") };
+            if ram[x].bit(4) { print!("[]") } else { print!("x") };
+            if ram[x].bit(5) { print!("[]") } else { print!("x") };
+            if ram[x].bit(6) { print!("[]") } else { print!("x") };
+            if ram[x].bit(7) { println!("[]") } else { println!("x") };
+        }
+}
+
+fn debug_vram (ram: &mut[u8; 256]){
+        for x in 176..256  {
+            print!("{} ", x);
+            if ram[x].bit(0) { print!("[]") } else { print!("x") };
+            if ram[x].bit(1) { print!("[]") } else { print!("x") };
+            if ram[x].bit(2) { print!("[]") } else { print!("x") };
+            if ram[x].bit(3) { print!("[]") } else { print!("x") };
+            if ram[x].bit(4) { print!("[]") } else { print!("x") };
+            if ram[x].bit(5) { print!("[]") } else { print!("x") };
+            if ram[x].bit(6) { print!("[]") } else { print!("x") };
+            if ram[x].bit(7) { println!("[]") } else { println!("x") };
+    }
+}
+
+fn debug(cpu: &mut CPU, rom: [u8; 4096]) {
     let instruction = rom[cpu.pc as usize];
     let instruction_mais_1 = rom[(cpu.pc + 1) as usize];
 
@@ -107,20 +142,6 @@ fn debug(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("stack = {}", cpu.stack_register);
     println!("cf = {}", cpu.carry_flag);
     println!("timer_enabled = {}", cpu.timer_enabled);
-
-    if STATIC_CONFIG.lock().unwrap().get("debug_memory").unwrap() == "true"{
-        for x in 176..256  {
-            print!("{} ", x);
-            if ram[x].bit(0) { print!("[]") } else { print!("x") };
-            if ram[x].bit(1) { print!("[]") } else { print!("x") };
-            if ram[x].bit(2) { print!("[]") } else { print!("x") };
-            if ram[x].bit(3) { print!("[]") } else { print!("x") };
-            if ram[x].bit(4) { print!("[]") } else { print!("x") };
-            if ram[x].bit(5) { print!("[]") } else { print!("x") };
-            if ram[x].bit(6) { print!("[]") } else { print!("x") };
-            if ram[x].bit(7) { println!("[]") } else { println!("x") };
-        }
-    }
 
     println!("----------------------------");
 }
