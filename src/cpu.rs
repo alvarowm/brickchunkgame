@@ -843,7 +843,7 @@ pub fn read_01001110 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
     println!("READ MR0A");
     let curent_page:u8 = (cpu.pc / 256) as u8;
     let mut rom_address:u16 = 0 ;
-    cpu.pc+=2;
+    cpu.pc+=1;
 
     rom_address.set_bit(0,cpu.r4.bit(0));
     rom_address.set_bit(1,cpu.r4.bit(1));
