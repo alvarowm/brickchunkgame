@@ -3,20 +3,20 @@ use bit::BitIndex;
 
 #[derive(Debug)]
 pub struct LcdScreen {
-    rowsxcolumns: [[bool;10];20]
+    pub rowsxcolumns: [[bool;10];20]
 }
 pub fn show(ram: [u8; 256]){
     let lcd = map_ram_to_lcd(ram);
     for i in 0..lcd.rowsxcolumns.len() {
         for j in 0..lcd.rowsxcolumns[i].len(){
-            let _ = print!("{}", if lcd.rowsxcolumns[i][j] {"■"} else {"□"});
+            print!("{}", if lcd.rowsxcolumns[i][j] {"■"} else {"□"});
         }
        println!();
     }
 }
 
 pub fn map_ram_to_lcd (ram: [u8; 256]) -> LcdScreen{
-    let lcd_screen = LcdScreen{
+    LcdScreen{
         rowsxcolumns: [
             [ram[217].bit(3),ram[217].bit(2),ram[217].bit(1),ram[217].bit(0),ram[216].bit(3),ram[216].bit(2),ram[216].bit(1),ram[216].bit(0),ram[194].bit(3),ram[192].bit(3)],
             [ram[219].bit(3),ram[219].bit(2),ram[219].bit(1),ram[219].bit(0),ram[218].bit(3),ram[218].bit(2),ram[218].bit(1),ram[218].bit(0),ram[194].bit(0),ram[192].bit(0)],
@@ -38,6 +38,5 @@ pub fn map_ram_to_lcd (ram: [u8; 256]) -> LcdScreen{
             [ram[251].bit(3),ram[251].bit(2),ram[251].bit(1),ram[251].bit(0),ram[250].bit(3),ram[250].bit(2),ram[250].bit(1),ram[250].bit(0),ram[215].bit(1),ram[213].bit(1)],
             [ram[253].bit(3),ram[253].bit(2),ram[253].bit(1),ram[253].bit(0),ram[252].bit(3),ram[252].bit(2),ram[252].bit(1),ram[252].bit(0),ram[215].bit(3),ram[213].bit(3)],
             [ram[255].bit(3),ram[255].bit(2),ram[255].bit(1),ram[255].bit(0),ram[254].bit(3),ram[254].bit(2),ram[254].bit(1),ram[254].bit(0),ram[215].bit(2),ram[213].bit(2)]]
-    };
-    return lcd_screen;
+    }
 }

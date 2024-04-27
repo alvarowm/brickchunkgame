@@ -49,7 +49,7 @@ pub struct CPU {
 }
 
 pub fn res (cpu: &mut CPU){
-    println!("res");
+    //println!("res");
     cpu.ei = false;
     cpu.pc = 0;
     cpu.timer_flag = false;
@@ -148,7 +148,7 @@ fn debug(cpu: &mut CPU, rom: [u8; 4096]) {
 
 //ADC A,[R1R0]
 pub fn adc_00001000 (cpu: &mut CPU, ram: &[u8; 256]){
-    println!("ADC A,[R1R0]");
+    //println!("ADC A,[R1R0]");
     cpu.pc+=1;
 
     let resultado:u8 = cpu.acc + ram[((cpu.r1 << 4) + cpu.r0) as usize] + (if cpu.carry_flag { 1 } else { 0 });
@@ -163,7 +163,7 @@ pub fn adc_00001000 (cpu: &mut CPU, ram: &[u8; 256]){
 
 //ADD A,XH
 pub fn add_010000000000dddd (cpu: &mut CPU, data:u8){
-    println!("ADD A,XH");
+    //println!("ADD A,XH");
     cpu.pc+=2;
 
     let resultado = cpu.acc + data ;
@@ -178,7 +178,7 @@ pub fn add_010000000000dddd (cpu: &mut CPU, data:u8){
 
 //ADD A,[R1R0]
 pub fn add_00001001 (cpu: &mut CPU, ram: &[u8; 256]){
-    println!("ADD A,[R1R0]");
+    //println!("ADD A,[R1R0]");
     cpu.pc+=1;
 
     let resultado = cpu.acc + ram[((cpu.r1 << 4) + cpu.r0) as usize];
@@ -193,14 +193,14 @@ pub fn add_00001001 (cpu: &mut CPU, ram: &[u8; 256]){
 
 //AND A,XH
 pub fn and_010000100000 (cpu: &mut CPU, byte2:u8){
-    println!("AND A,XH");
+    //println!("AND A,XH");
     cpu.pc+=2;
     cpu.acc &= byte2;
 }
 
 //AND A,[R1R0]
 pub fn and_00011010 (cpu: &mut CPU, ram: &[u8; 256]){
-    println!("AND A,[R1R0]");
+    //println!("AND A,[R1R0]");
     cpu.pc +=1;
 
     let data = ram[((cpu.r1 << 4) + cpu.r0) as usize];
@@ -210,7 +210,7 @@ pub fn and_00011010 (cpu: &mut CPU, ram: &[u8; 256]){
 
 //AND [R1R0],A
 pub fn and_00011101 (cpu: &mut CPU, ram: &mut [u8; 256]){
-    println!("AND [R1R0],A");
+    //println!("AND [R1R0],A");
     cpu.pc +=1;
 
     ram[((cpu.r1 << 4) + cpu.r0) as usize] &= cpu.acc;
@@ -218,7 +218,7 @@ pub fn and_00011101 (cpu: &mut CPU, ram: &mut [u8; 256]){
 
 //CALL address
 pub fn call_1111 (cpu: &mut CPU, byte1: u8, byte2: u8){
-    println!("CALL address");
+    //println!("CALL address");
     cpu.stack_register = cpu.pc + 2;
 
     cpu.pc.set_bit(0, byte2.bit(0));
@@ -238,14 +238,14 @@ pub fn call_1111 (cpu: &mut CPU, byte1: u8, byte2: u8){
 
 //CLC
 pub fn clc_00101010 (cpu: &mut CPU){
-    println!("CLC");
+    //println!("CLC");
     cpu.pc+=1;
     cpu.carry_flag = false;
 }
 
 //DAA
 pub fn daa_00110110 (cpu: &mut CPU){
-    println!("DAA");
+    //println!("DAA");
     cpu.pc+=1;
 
     if cpu.acc > 9 || cpu.carry_flag{
@@ -257,7 +257,7 @@ pub fn daa_00110110 (cpu: &mut CPU){
 
 //DEC A
 pub fn dec_00111111 (cpu: &mut CPU){
-    println!("DEC A");
+    //println!("DEC A");
     cpu.pc+=1;
     if cpu.acc == 0{
         cpu.acc = 15
@@ -268,7 +268,7 @@ pub fn dec_00111111 (cpu: &mut CPU){
 
 //DEC Rn
 pub fn dec_0001nnn1 (cpu: &mut CPU, instruction: u8){
-    println!("DEC Rn");
+    //println!("DEC Rn");
     cpu.pc+=1;
 
     let mut register:u8 = 0;
@@ -288,7 +288,7 @@ pub fn dec_0001nnn1 (cpu: &mut CPU, instruction: u8){
 
 //DEC [R1R0]
 pub fn dec_00001101 (cpu: &mut CPU, ram: &mut [u8; 256]){
-    println!("DEC [R1R0]");
+    //println!("DEC [R1R0]");
     cpu.pc+=1;
 
     if ram[((cpu.r1 << 4) + cpu.r0) as usize] == 0{
@@ -300,7 +300,7 @@ pub fn dec_00001101 (cpu: &mut CPU, ram: &mut [u8; 256]){
 
 //DEC [R3R2]
 pub fn dec_00001111 (cpu: &mut CPU, ram: &mut [u8; 256]){
-    println!("DEC [R3R2]");
+    //println!("DEC [R3R2]");
     cpu.pc+=1;
 
     if ram[((cpu.r3 << 4) + cpu.r2)as usize] == 0{
@@ -312,14 +312,14 @@ pub fn dec_00001111 (cpu: &mut CPU, ram: &mut [u8; 256]){
 
 //DI
 pub fn di_00101101 (cpu: &mut CPU){
-    println!("DI");
+    //println!("DI");
     cpu.pc+=1;
     cpu.ei = false;
 }
 
 //EI
 pub fn ei_00101100 (cpu: &mut CPU){
-    println!("EI");
+    //println!("EI");
     cpu.pc+=1;
     cpu.ei = true;
 }
@@ -332,7 +332,7 @@ pub fn halt_0011011100111110 (){
 //IN A,Pi
 //pM 0 0 1 1 0 0 1 0
 pub fn in_00110010 (cpu: &mut CPU){
-    println!("IN A,Pi");
+    //println!("IN A,Pi");
     cpu.pc+=1;
 
     let mut pm:u8 = 0;
@@ -346,7 +346,7 @@ pub fn in_00110010 (cpu: &mut CPU){
 //IN A,Pi
 //pS 0 0 1 1 0 0 1 1
 pub fn in_00110011 (cpu: &mut CPU){
-    println!("IN A,Pi");
+    //println!("IN A,Pi");
     cpu.pc+=1;
     let mut ps:u8 = 0;
     ps.set_bit(0,cpu.ps0);
@@ -359,7 +359,7 @@ pub fn in_00110011 (cpu: &mut CPU){
 //IN A,Pi
 //pP 0 0 1 1 0 1 0 0
 pub fn in_00110100 (cpu: &mut CPU){
-    println!("IN A,Pi");
+    //println!("IN A,Pi");
     cpu.pc+=1;
     let mut pp:u8 = 0;
     pp.set_bit(0,cpu.pp0);
@@ -371,7 +371,7 @@ pub fn in_00110100 (cpu: &mut CPU){
 
 //INC A
 pub fn inc_00110001 (cpu: &mut CPU){
-    println!("INC A");
+    //println!("INC A");
     cpu.pc+=1;
     if cpu.acc == 15 {
         cpu.acc = 0;
@@ -382,7 +382,7 @@ pub fn inc_00110001 (cpu: &mut CPU){
 
 //INC Rn
 pub fn inc_0001nnn0 (cpu: &mut CPU, instruction: u8) {
-    println!("INC Rn");
+    //println!("INC Rn");
     cpu.pc+=1;
     let mut register:u8 = 0;
     register.set_bit(0,instruction.bit(1));
@@ -401,7 +401,7 @@ pub fn inc_0001nnn0 (cpu: &mut CPU, instruction: u8) {
 
 //INC [R1R0]
 pub fn inc_00001100 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("INC [R1R0]");
+    //println!("INC [R1R0]");
     cpu.pc+=1;
     if ram[((cpu.r1 << 4) + cpu.r0) as usize] == 15{
         ram[((cpu.r1 << 4) + cpu.r0)as usize] = 0
@@ -412,7 +412,7 @@ pub fn inc_00001100 (cpu: &mut CPU, ram: &mut [u8; 256]) {
 
 //INC [R3R2]
 pub fn inc_00001110 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("INC [R3R2]");
+    //println!("INC [R3R2]");
     cpu.pc+=1;
     if ram[((cpu.r3 << 4) + cpu.r2) as usize] == 15{
         ram[((cpu.r3 << 4) + cpu.r2) as usize] = 0
@@ -423,7 +423,7 @@ pub fn inc_00001110 (cpu: &mut CPU, ram: &mut [u8; 256]) {
 
 //JAn address
 pub fn ja_100nnaaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JAn address");
+    //println!("JAn address");
     let mut bit_do_acumulador:u8 = 0;
     bit_do_acumulador.set_bit(0, byte1.bit(3));
     bit_do_acumulador.set_bit(1, byte1.bit(4));
@@ -447,7 +447,7 @@ pub fn ja_100nnaaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JC address
 pub fn jc_11000aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JC address");
+    //println!("JC address");
     if cpu.carry_flag {
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
@@ -467,7 +467,7 @@ pub fn jc_11000aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JMP address
 pub fn jmp_1110aaaaaaaaaaaa  (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JMP address");
+    //println!("JMP address");
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
         cpu.pc.set_bit(2, byte2.bit(2));
@@ -484,7 +484,7 @@ pub fn jmp_1110aaaaaaaaaaaa  (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JNC address
 pub fn jnc_11001aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JNC address");
+    //println!("JNC address");
     if !cpu.carry_flag {
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
@@ -504,7 +504,7 @@ pub fn jnc_11001aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JNZ A,address
 pub fn jnz_10111aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JNZ A,address");
+    //println!("JNZ A,address");
     if cpu.acc != 0 {
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
@@ -524,7 +524,7 @@ pub fn jnz_10111aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JNZ Rn,address
 pub fn jnz_rrrrraaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JNZ Rn,address");
+    //println!("JNZ Rn,address");
     let mut num_registrador:u8 = 0;
 
     num_registrador.set_bit(3,byte1.bit(3));
@@ -566,7 +566,7 @@ pub fn jnz_rrrrraaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JTMR address
 pub fn jtmr_11010aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JTMR address");
+    //println!("JTMR address");
     if cpu.timer_flag  {
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
@@ -588,7 +588,7 @@ pub fn jtmr_11010aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //JZ A,address
 pub fn jz_10110aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("JZ A,address");
+    //println!("JZ A,address");
     if cpu.acc == 0  {
         cpu.pc.set_bit(0, byte2.bit(0));
         cpu.pc.set_bit(1, byte2.bit(1));
@@ -608,7 +608,7 @@ pub fn jz_10110aaaaaaaaaaa (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //MOV A,Rn
 pub fn mov_0010nnn1 (cpu: &mut CPU, byte1: u8) {
-    println!("MOV A,Rn");
+    //println!("MOV A,Rn");
     cpu.pc+=1;
 
     let mut num_registrador:u8 = 0;
@@ -629,7 +629,7 @@ pub fn mov_0010nnn1 (cpu: &mut CPU, byte1: u8) {
 
 //MOV A,TMRH
 pub fn mov_00111011 (cpu: &mut CPU) {
-    println!("MOV A,TMRH");
+    //println!("MOV A,TMRH");
     cpu.pc+=1;
     cpu.acc =0;
     cpu.acc.set_bit(0, cpu.timer_counter.bit(4));
@@ -640,7 +640,7 @@ pub fn mov_00111011 (cpu: &mut CPU) {
 
 //MOV A,TMRL
 pub fn mov_00111010 (cpu: &mut CPU) {
-    println!("MOV A,TMRL");
+    //println!("MOV A,TMRL");
     cpu.pc +=1;
     cpu.acc =0;
     cpu.acc.set_bit(0, cpu.timer_counter.bit(0));
@@ -651,7 +651,7 @@ pub fn mov_00111010 (cpu: &mut CPU) {
 
 //MOV A,XH
 pub fn mov_0111dddd (cpu: &mut CPU, byte1: u8) {
-    println!("MOV A,XH");
+    //println!("MOV A,XH");
     cpu.pc+=1;
     cpu.acc = 0;
     cpu.acc.set_bit(0, byte1.bit(0));
@@ -662,21 +662,21 @@ pub fn mov_0111dddd (cpu: &mut CPU, byte1: u8) {
 
 //MOV A,[R1R0]
 pub fn mov_00000100 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("MOV A,[R1R0]");
+    //println!("MOV A,[R1R0]");
     cpu.pc+=1;
     cpu.acc = ram[((cpu.r1 << 4) + cpu.r0) as usize];
 }
 
 //MOV A,[R3R2]
 pub fn mov_00000110 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("MOV A,[R3R2]");
+    //println!("MOV A,[R3R2]");
     cpu.pc+=1;
     cpu.acc = ram[((cpu.r3 << 4) + cpu.r2) as usize];
 }
 
 //MOV R1R0,XXH
 pub fn mov_0101dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("MOV R1R0,XXH");
+    //println!("MOV R1R0,XXH");
     cpu.pc+=2;
 
     cpu.r0.set_bit(0, byte1.bit(0));
@@ -692,7 +692,7 @@ pub fn mov_0101dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //MOV R3R2,XXH
 pub fn mov_0110dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
-    println!("MOV R3R2,XXH");
+    //println!("MOV R3R2,XXH");
     cpu.pc+=2;
 
     cpu.r2.set_bit(0, byte1.bit(0));
@@ -708,7 +708,7 @@ pub fn mov_0110dddd0000dddd (cpu: &mut CPU, byte1: u8, byte2: u8) {
 
 //MOV r4,XH
 pub fn mov_010001100000dddd (cpu: &mut CPU, byte2: u8) {
-    println!("MOV r4,XH");
+    //println!("MOV r4,XH");
     cpu.pc+=2;
 
     cpu.r4.set_bit(0, byte2.bit(0));
@@ -719,7 +719,7 @@ pub fn mov_010001100000dddd (cpu: &mut CPU, byte2: u8) {
 
 //MOV Rn,A
 pub fn mov_0010nnn0 (cpu: &mut CPU, byte1: u8) {
-    println!("MOV Rn,A");
+    //println!("MOV Rn,A");
     cpu.pc+=1;
 
     let mut num_registrador:u8 = 0;
@@ -758,7 +758,7 @@ pub fn mov_0010nnn0 (cpu: &mut CPU, byte1: u8) {
 
 //MOV TMRH,A
 pub fn mov_00111101 (cpu: &mut CPU) {
-    println!("MOV TMRH,A");
+    //println!("MOV TMRH,A");
     cpu.pc+=1;
     cpu.timer_counter = 0;
     cpu.timer_counter.set_bit(4, cpu.acc.bit(0));
@@ -769,7 +769,7 @@ pub fn mov_00111101 (cpu: &mut CPU) {
 
 //MOV TMRL,A
 pub fn mov_00111100 (cpu: &mut CPU) {
-    println!("MOV TMRL,A");
+    //println!("MOV TMRL,A");
     cpu.pc+=1;
     cpu.timer_counter = 0;
     cpu.timer_counter.set_bit(0, cpu.acc.bit(0));
@@ -780,27 +780,27 @@ pub fn mov_00111100 (cpu: &mut CPU) {
 
 //MOV [R1R0],A
 pub fn mov_00000101 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("MOV [R1R0],A");
+    //println!("MOV [R1R0],A");
     cpu.pc+=1;
     ram[((cpu.r1 << 4) + cpu.r0) as usize] = cpu.acc;
 }
 
 //MOV [R3R2],A
 pub fn mov_00000111 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("MOV [R3R2],A");
+    //println!("MOV [R3R2],A");
     cpu.pc+=1;
     ram[((cpu.r3 << 4) + cpu.r2) as usize] = cpu.acc;
 }
 
 //NOP
 pub fn nop_00111110 (cpu: &mut CPU) {
-    println!("NOP");
+    //println!("NOP");
     cpu.pc+=1;
 }
 
 //OR A,XH
 pub fn or_010001000000dddd (cpu: &mut CPU, byte2: u8) {
-    println!("OR A,XH");
+    //println!("OR A,XH");
     cpu.pc+=2;
     let mut dado:u8 = 0;
 
@@ -814,7 +814,7 @@ pub fn or_010001000000dddd (cpu: &mut CPU, byte2: u8) {
 
 //OR A,[R1R0]
 pub fn or_00011100 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("OR A,[R1R0]");
+    //println!("OR A,[R1R0]");
     cpu.pc+=1;
 
     cpu.acc |= ram[((cpu.r1 << 4) + cpu.r0) as usize];
@@ -822,14 +822,14 @@ pub fn or_00011100 (cpu: &mut CPU, ram: &mut [u8; 256]) {
 
 //OR [R1R0],A
 pub fn or_00011111 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("OR [R1R0],A");
+    //println!("OR [R1R0],A");
     cpu.pc+=1;
     ram[((cpu.r1 << 4) + cpu.r0) as usize] |= cpu.acc;
 }
 
 //OUT PA,A
 pub fn out_00110000 (cpu: &mut CPU) {
-    println!("OUT PA,A");
+    //println!("OUT PA,A");
     cpu.pc+=1;
 
     cpu.pa0 = cpu.acc.bit(0);
@@ -840,7 +840,7 @@ pub fn out_00110000 (cpu: &mut CPU) {
 
 //READ MR0A
 pub fn read_01001110 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
-    println!("READ MR0A");
+    //println!("READ MR0A");
     let curent_page:u8 = (cpu.pc / 256) as u8;
     let mut rom_address:u16 = 0 ;
     cpu.pc+=1;
@@ -876,7 +876,7 @@ pub fn read_01001110 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 
 //READ R4A
 pub fn read_01001100 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
-    println!("READ R4A");
+    //println!("READ R4A");
     let curent_page:u8 = (cpu.pc / 256) as u8;
     let mut rom_address:u16 = 0 ;
     cpu.pc+=1;
@@ -911,7 +911,7 @@ pub fn read_01001100 (cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 
 //READF MR0A
 pub fn read_01001111(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
-    println!("READF MR0A");
+    //println!("READF MR0A");
     cpu.pc+=1;
     let mut rom_address:u16 = 0 ;
 
@@ -945,7 +945,7 @@ pub fn read_01001111(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 
 //READF R4A
 pub fn read_01001101(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
-    println!("READF R4A");
+    //println!("READF R4A");
     cpu.pc+=1;
     let mut rom_address:u16 = 0 ;
 
@@ -979,7 +979,7 @@ pub fn read_01001101(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]) {
 
 //RET
 pub fn ret_00101110(cpu: &mut CPU) {
-    println!("RET");
+    //println!("RET");
     cpu.pc.set_bit(0, cpu.stack_register.bit(0));
     cpu.pc.set_bit(1, cpu.stack_register.bit(1));
     cpu.pc.set_bit(2, cpu.stack_register.bit(2));
@@ -998,7 +998,7 @@ pub fn ret_00101110(cpu: &mut CPU) {
 
 //RETI
 pub fn reti_00101111(cpu: &mut CPU) {
-    println!("RETI");
+    //println!("RETI");
     cpu.pc.set_bit(0, cpu.stack_register.bit(0));
     cpu.pc.set_bit(1, cpu.stack_register.bit(1));
     cpu.pc.set_bit(2, cpu.stack_register.bit(2));
@@ -1017,7 +1017,7 @@ pub fn reti_00101111(cpu: &mut CPU) {
 
 //RL A
 pub fn rl_00000001(cpu: &mut CPU) {
-    println!("RL A");
+    //println!("RL A");
     cpu.pc+=1;
 
     cpu.acc <<= 1;
@@ -1028,7 +1028,7 @@ pub fn rl_00000001(cpu: &mut CPU) {
 
 //RLC A
 pub fn rlc_00000011(cpu: &mut CPU) {
-    println!("RLC A");
+    //println!("RLC A");
     cpu.pc+=1;
 
     cpu.acc <<= 1;
@@ -1039,7 +1039,7 @@ pub fn rlc_00000011(cpu: &mut CPU) {
 
 //RR A
 pub fn rr_00000000(cpu: &mut CPU) {
-    println!("RR A");
+    //println!("RR A");
     cpu.pc+=1;
 
     let bit3 = cpu.acc.bit(0);
@@ -1051,7 +1051,7 @@ pub fn rr_00000000(cpu: &mut CPU) {
 
 //RRC A
 pub fn rrc_00000010(cpu: &mut CPU) {
-    println!("RRC A");
+    //println!("RRC A");
     cpu.pc+=1;
 
     let bit3 = cpu.acc.bit(0);
@@ -1063,7 +1063,7 @@ pub fn rrc_00000010(cpu: &mut CPU) {
 
 //SBC A,[R1R0]
 pub fn sbc_00001010 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("SBC A,[R1R0]");
+    //println!("SBC A,[R1R0]");
     cpu.pc+=1;
 
     let resultado:i16 = cpu.acc as i16 - ram[((cpu.r1 << 4) + cpu.r0) as usize] as i16 - (if cpu.carry_flag { 0 } else { 1 }) as i16 ;
@@ -1075,44 +1075,44 @@ pub fn sbc_00001010 (cpu: &mut CPU, ram: &mut [u8; 256]) {
 
 //SOUND A
 pub fn sound_01001011 (cpu: &mut CPU){
-    println!("SOUND A");
+    //println!("SOUND A");
     cpu.pc+=1;
 }
 
 //SOUND LOOP
 pub fn sound_loop_01001001 (cpu: &mut CPU){
-    println!("SOUND LOOP");
+    //println!("SOUND LOOP");
     cpu.pc+=1;
 }
 
 //SOUND OFF
 pub fn sound_off_01001010 (cpu: &mut CPU){
-    println!("SOUND OFF");
+    //println!("SOUND OFF");
     cpu.pc+=1;
 }
 
 //SOUND ONE
 pub fn sound_one_01001000 (cpu: &mut CPU){
-    println!("SOUND ONE");
+    //println!("SOUND ONE");
     cpu.pc+=1;
 }
 
 //SOUND n
 pub fn sound_010001010000nnnn (cpu: &mut CPU){
-    println!("SOUND n");
+    //println!("SOUND n");
     cpu.pc+=2;
 }
 
 //STC
 pub fn stc_00101011 (cpu: &mut CPU){
-    println!("STC");
+    //println!("STC");
     cpu.pc+=1;
     cpu.carry_flag = true;
 }
 
 //SUB A,XH
 pub fn sub_010000010000dddd (cpu: &mut CPU, byte1: u8) {
-    println!("SUB A,XH");
+    //println!("SUB A,XH");
     cpu.pc+=2;
 
     let resultado:i16 = cpu.acc as i16 - byte1 as i16;
@@ -1124,7 +1124,7 @@ pub fn sub_010000010000dddd (cpu: &mut CPU, byte1: u8) {
 
 //SUB A,[R1R0]
 pub fn sub_00001011 (cpu: &mut CPU, ram: &mut [u8; 256]) {
-    println!("SUB A,[R1R0]");
+    //println!("SUB A,[R1R0]");
     cpu.pc+=1;
 
     let resultado = cpu.acc - ram[((cpu.r1 << 4) + cpu.r0) as usize];
@@ -1139,35 +1139,35 @@ pub fn sub_00001011 (cpu: &mut CPU, ram: &mut [u8; 256]) {
 }
 //TIMER OFF
 pub fn timer_off_00111001 (cpu: &mut CPU){
-    println!("TIMER OFF");
+    //println!("TIMER OFF");
     cpu.pc+=1;
     cpu.timer_enabled= false;
 }
 
 //TIMER ON
 pub fn timer_on_00111000 (cpu: &mut CPU){
-    println!("TIMER ON");
+    //println!("TIMER ON");
     cpu.pc+=1;
     cpu.timer_enabled= true;
 }
 
 //TIMER XXH
 pub fn timer_01000111dddddddd (cpu: &mut CPU, byte2:u8){
-    println!("TIMER XXH");
+    //println!("TIMER XXH");
     cpu.pc+=2;
     cpu.timer_counter = byte2;
 }
 
 //XOR A,XH
 pub fn xor_010000110000dddd (cpu: &mut CPU, byte2:u8){
-    println!("XOR A,XH");
+    //println!("XOR A,XH");
     cpu.pc+=2;
     cpu.acc ^=byte2;
 }
 
 //XOR A,[R1R0]
 pub fn xor_00011011 (cpu: &mut CPU, ram: &mut [u8; 256] ){
-    println!("XOR A,[R1R0]");
+    //println!("XOR A,[R1R0]");
     cpu.pc+=1;
 
     cpu.acc ^= ram[((cpu.r1 << 4) + cpu.r0) as usize];
@@ -1175,7 +1175,7 @@ pub fn xor_00011011 (cpu: &mut CPU, ram: &mut [u8; 256] ){
 
 //XOR [R1R0],A
 pub fn xor_00011110 (cpu: &mut CPU, ram: &mut [u8; 256] ) {
-    println!("XOR [R1R0],A");
+    //println!("XOR [R1R0],A");
     cpu.pc+=1;
     ram[((cpu.r1 << 4) + cpu.r0) as usize] ^= cpu.acc;
 }

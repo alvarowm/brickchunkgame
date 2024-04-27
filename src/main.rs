@@ -6,9 +6,23 @@ use std::time::{Duration, Instant};
 use crossterm::event::KeyEvent;
 use brickchunkgame::cpu::CPU;
 use crate::properties_reader::STATIC_CONFIG;
+use crossterm::{
+    event::{self, KeyCode, KeyEventKind},
+    terminal::{
+        disable_raw_mode, enable_raw_mode, EnterAlternateScreen,
+        LeaveAlternateScreen,
+    },
+    ExecutableCommand,
+};
+use ratatui::{Frame, prelude::{CrosstermBackend, Terminal}};
+use std::io::{stdout, Result};
+use ratatui::layout::{Constraint, Direction, Layout};
+use ratatui::widgets::{Block, Borders};
+use brickchunkgame::lcd::LcdScreen;
 
-fn main() {
-    show_logo_version();
+static LCD_SCREEN: Mutex<LcdScreen> = Mutex::new(LcdScreen{ rowsxcolumns: [[false;10];20] });
+fn main() -> Result<()>{
+    //show_logo_version();
 
     let args: Vec<String> = env::args().collect();
 
@@ -66,27 +80,72 @@ fn main() {
     let interval = Duration::from_micros(1);
     let mut next_time = Instant::now() + interval;
 
+    //ui
+    stdout().execute(EnterAlternateScreen)?;
+    enable_raw_mode()?;
+    let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
+    terminal.clear()?;
+
     //main loop
     loop {
         timer_counter +=1;
-        if timer_counter == 3 {
+        if timer_counter == 4 {
             timer::tick(& mut cpu,rom);
             timer_counter = 0;
         }
+
         cpu::check_interrupts(& mut cpu, rom, &kb_mutex);
         cpu::exec_instruction(&mut cpu, &mut ram, rom);
+
+        LCD_SCREEN.lock().unwrap().rowsxcolumns =  lcd::map_ram_to_lcd(ram).rowsxcolumns;
+
+        terminal.draw(ui).unwrap();
+
         if STATIC_CONFIG.lock().unwrap().get("lcd").unwrap() == "true"{
             lcd::show(ram);
         }
         sleep(next_time - Instant::now());
         next_time += interval;
     }
+
+    stdout().execute(LeaveAlternateScreen)?;
+    disable_raw_mode()?;
+    Ok(())
 }
 
-fn show_logo_version() {
-    println!();
-    //logo
-    println!();
-    println!("v{}", env!("CARGO_PKG_VERSION"));
-    println!();
+fn ui(frame: &mut Frame) {
+
+    let main_layout = Layout::new(
+        Direction::Horizontal,
+        [
+            Constraint::Percentage(100)
+        ],
+    )
+        .split(frame.size());
+
+    let buffer = frame.buffer_mut();
+
+    for row in main_layout[0].rows() {
+        for col in row.columns() {
+            if col.x < 10 && col.y < 20{
+                if LCD_SCREEN.lock().unwrap().rowsxcolumns[col.y as usize][col.x as usize]{
+                    let cell = buffer.get_mut(col.x, col.y);
+                    cell.set_symbol("▮");
+                } else {
+                    let cell = buffer.get_mut(col.x, col.y);
+                    cell.set_symbol("▯");
+                }
+            }
+
+
+        }
+    }
+
+    frame.render_widget(
+        Block::new().borders(Borders::NONE),
+        main_layout[0],
+    );
+
 }
+
+
