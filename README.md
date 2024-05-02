@@ -27,7 +27,7 @@ Um emulador de Brick Game, baseado no microcontrolador HT1130/HT44300/443A0 feit
 ## Uso
 
 brickchunkgame.exe -properties arquivo.properties -rom rom.bin
-Caso não seja colocado nenhum parâmetro o emulador vai procurar no local do executável os arquivo:
+Caso não seja colocado nenhum parâmetro o emulador vai procurar no local do executável os arquivos:
 - E23PlusMarkII96in1.bin
 - application.properties
 
