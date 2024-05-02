@@ -1,7 +1,8 @@
 # BrickChunkGame
 
-<img src="https://github.com/alvarowm/brickchunkgame/blob/master/rust_button_icon_151922.svg" width="512" height="188"/>
-
+<p align="center">
+<img src="https://github.com/alvarowm/brickchunkgame/blob/master/rust_button_icon_151922.svg" width="512" height="188" />
+</p>
 Um emulador de Brick Game, baseado no microcontrolador HT1130/HT44300/443A0 feito inteiramente em Rust visando um código legível sem o uso extensivo de bitwise para as intruções.
 <br>Todo o projeto é baseado neste incrível trabalho de engenharia reversa -> https://habr.com/ru/articles/773040/
 
