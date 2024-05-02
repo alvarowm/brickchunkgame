@@ -1182,7 +1182,7 @@ pub fn xor_00011110 (cpu: &mut CPU, ram: &mut [u8; 256] ) {
 
 pub fn check_interrupts(cpu: &mut CPU, rom: [u8; 4096], mutex: &Arc<Mutex<Vec<KeyEvent>>>) {
     let instruction = rom[cpu.pc as usize];
-    if cpu.ei && mutex.lock().unwrap().len() > 0 && !(instruction.bit(0) &&
+    if mutex.lock().unwrap().len() > 0 && !(instruction.bit(0) &&
                 instruction.bit(1) &&
                 instruction.bit(2) &&
                 instruction.bit(3)) {
