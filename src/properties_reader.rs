@@ -14,13 +14,13 @@ pub fn red_config_from_file(file: String) -> HashMap<String, String> {
     let config_file = if !file.is_empty() { file } else { "./application.properties".to_owned() };
 
     let file = match File::open(&config_file) {
-        Err(why) => panic!("There was a error opening {}: {}", config_file, why),
+        Err(why) => panic!("Houve um erro abrindo {}: {}", config_file, why),
         Ok(file) => file,
     };
 
     match read(BufReader::new(file)) {
         Err(why) => panic!(
-            "There was a error opening the config file {}: {}",
+            "Houve um erro abrindo o arquivo de configuração {}: {}",
             config_file, why
         ),
         Ok(file) => file,

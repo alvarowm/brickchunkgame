@@ -17,7 +17,7 @@ pub fn read_rom_from_file(args: Vec<String>) -> Vec<u8> {
         rom_location = "./E23PlusMarkII96in1.bin".to_string();
     }
     match File::open(&rom_location) {
-        Err(why) => panic!("There was a error opening {}: {}", rom_location, why),
+        Err(why) => panic!("Houve um erro abrindo {}: {}", rom_location, why),
         Ok(file) => file,
     };
 
