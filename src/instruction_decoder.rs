@@ -4,10 +4,12 @@ use crate::cpu;
 
 pub fn execute_correct_instruction(cpu: &mut CPU, ram: &mut [u8; 256], rom: [u8; 4096]){
     if cpu.pc.bit(12){
+        println!("{}", cpu.pc);
         panic!("pc inválido");
     }
 
     if cpu.acc.bit(4){
+        println!("{}", cpu.pc);
         panic!("acc inválido");
     }
 

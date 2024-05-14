@@ -88,11 +88,7 @@ fn main() -> Result<()>{
 
     //main loop
     loop {
-        timer_counter +=1;
-        if timer_counter == 4 {
-            timer::tick(& mut cpu,rom);
-            timer_counter = 0;
-        }
+        timer::tick(& mut cpu,rom);
 
         cpu::check_interrupts(& mut cpu, rom, &kb_mutex);
         cpu::exec_instruction(&mut cpu, &mut ram, rom);
@@ -101,9 +97,6 @@ fn main() -> Result<()>{
 
         terminal.draw(ui).unwrap();
 
-        if STATIC_CONFIG.lock().unwrap().get("lcd").unwrap() == "true"{
-            lcd::show(ram);
-        }
         sleep(next_time - Instant::now());
         next_time += interval;
     }
