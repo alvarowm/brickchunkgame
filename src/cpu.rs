@@ -1073,7 +1073,7 @@ pub fn sbc_00001010(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SBC A,[R1R0]");
     cpu.pc += 1;
 
-    let mut resultado: i8 = (cpu.acc - ram[((cpu.r1 << 4) + cpu.r0) as usize] - (if cpu.carry_flag { 0 } else { 1 })) as i8;
+    let mut resultado: i8 = cpu.acc as i8 - ram[((cpu.r1 << 4) + cpu.r0) as usize] as i8 - if cpu.carry_flag { 0 } else { 1 };
 
     if resultado < 0 {
         resultado *=-1;
@@ -1131,7 +1131,7 @@ pub fn sub_010000010000dddd(cpu: &mut CPU, byte1: u8) {
     //println!("SUB A,XH");
     cpu.pc += 2;
 
-    let mut resultado: i8 = (cpu.acc - byte1) as i8;
+    let mut resultado: i8 = cpu.acc as i8 - byte1 as i8;
 
     if resultado < 0 {
         resultado *=-1;
@@ -1153,7 +1153,7 @@ pub fn sub_00001011(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SUB A,[R1R0]");
     cpu.pc += 1;
 
-    let mut resultado:i8 = (cpu.acc - ram[((cpu.r1 << 4) + cpu.r0) as usize]) as i8;
+    let mut resultado:i8 = cpu.acc as i8 - ram[((cpu.r1 << 4) + cpu.r0) as usize] as i8;
 
     if resultado < 0 {
         resultado *=-1;
