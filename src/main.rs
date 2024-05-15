@@ -75,17 +75,16 @@ fn main() -> Result<()>{
     let timer_div:u8 = 16;
     let mut timer_counter:u8 = 0;
 
-    //Para uso da lib de som do Holtek,
-    //128KHz ou 64KHz sao aceitaveis
-    let interval = Duration::from_micros(1);
-    let mut next_time = Instant::now() + interval;
-
     //ui
     stdout().execute(EnterAlternateScreen)?;
     enable_raw_mode()?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
 
+    //Para uso da lib de som do Holtek,
+    //128KHz ou 64KHz sao aceitaveis
+    let interval = Duration::from_micros(10);
+    let mut next_time = Instant::now() + interval;
     //main loop
     loop {
         timer::tick(& mut cpu,rom);
