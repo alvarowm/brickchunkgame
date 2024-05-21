@@ -768,7 +768,6 @@ pub fn mov_0010nnn0(cpu: &mut CPU, byte1: u8) {
 pub fn mov_00111101(cpu: &mut CPU) {
     //println!("MOV TMRH,A");
     cpu.pc += 1;
-    cpu.timer_counter = 0;
     cpu.timer_counter.set_bit(4, cpu.acc.bit(0));
     cpu.timer_counter.set_bit(5, cpu.acc.bit(1));
     cpu.timer_counter.set_bit(6, cpu.acc.bit(2));
@@ -779,7 +778,6 @@ pub fn mov_00111101(cpu: &mut CPU) {
 pub fn mov_00111100(cpu: &mut CPU) {
     //println!("MOV TMRL,A");
     cpu.pc += 1;
-    cpu.timer_counter = 0;
     cpu.timer_counter.set_bit(0, cpu.acc.bit(0));
     cpu.timer_counter.set_bit(1, cpu.acc.bit(1));
     cpu.timer_counter.set_bit(2, cpu.acc.bit(2));
@@ -1073,20 +1071,11 @@ pub fn sbc_00001010(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SBC A,[R1R0]");
     cpu.pc += 1;
 
-    let mut resultado: i8 = cpu.acc as i8 - ram[((cpu.r1 << 4) + cpu.r0) as usize] as i8 - if cpu.carry_flag { 0 } else { 1 };
+    cpu.acc = cpu.acc + !(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + if cpu.carry_flag {1} else {0};
 
-    if resultado < 0 {
-        resultado *=-1;
-    }
+    cpu.carry_flag = cpu.acc.bit(4);
 
-    let resultado = resultado as u8;
-
-    cpu.acc = 0;
-    cpu.acc.set_bit(0,resultado.bit(0));
-    cpu.acc.set_bit(1,resultado.bit(1));
-    cpu.acc.set_bit(2,resultado.bit(2));
-    cpu.acc.set_bit(3,resultado.bit(3));
-    cpu.carry_flag = resultado.bit(4);
+    cpu.acc.set_bit(4,false);
 }
 
 //SOUND A
@@ -1131,21 +1120,11 @@ pub fn sub_010000010000dddd(cpu: &mut CPU, byte1: u8) {
     //println!("SUB A,XH");
     cpu.pc += 2;
 
-    let mut resultado: i8 = cpu.acc as i8 - byte1 as i8;
+    cpu.acc = cpu.acc + !(byte1) - 240 + 1;
 
-    if resultado < 0 {
-        resultado *=-1;
-    }
+    cpu.carry_flag = cpu.acc.bit(4);
+    cpu.acc.set_bit(4,false);
 
-    let resultado = resultado as u8;
-
-    cpu.acc = 0;
-    cpu.acc.set_bit(0,resultado.bit(0));
-    cpu.acc.set_bit(1,resultado.bit(1));
-    cpu.acc.set_bit(2,resultado.bit(2));
-    cpu.acc.set_bit(3,resultado.bit(3));
-
-    cpu.carry_flag = resultado.bit(4);
 }
 
 //SUB A,[R1R0]
@@ -1153,20 +1132,9 @@ pub fn sub_00001011(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SUB A,[R1R0]");
     cpu.pc += 1;
 
-    let mut resultado:i8 = cpu.acc as i8 - ram[((cpu.r1 << 4) + cpu.r0) as usize] as i8;
-
-    if resultado < 0 {
-        resultado *=-1;
-    }
-
-    let resultado = resultado as u8;
-
-    cpu.acc = 0;
-    cpu.acc.set_bit(0,resultado.bit(0));
-    cpu.acc.set_bit(1,resultado.bit(1));
-    cpu.acc.set_bit(2,resultado.bit(2));
-    cpu.acc.set_bit(3,resultado.bit(3));
-    cpu.carry_flag = resultado.bit(4);
+    cpu.acc = cpu.acc + !(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + 1;
+    cpu.carry_flag = cpu.acc.bit(4);
+    cpu.acc.set_bit(4,false);
 }
 
 //TIMER OFF
@@ -1220,72 +1188,74 @@ pub fn check_interrupts(cpu: &mut CPU, rom: [u8; 4096], mutex: &Arc<Mutex<Vec<Ke
         instruction.bit(3)) {
         let key = mutex.lock().unwrap().pop().unwrap();
 
-        match key.code {
-            //Start
-            crossterm::event::KeyCode::Char('p') => {
-                cpu.ps0 = false;
+        if key.kind == KeyEventKind::Press {
+            match key.code {
+                //Start
+                crossterm::event::KeyCode::Char('p') => {
+                    cpu.ps0 = false;
 
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
                 }
-            }
-            //on/off
-            crossterm::event::KeyCode::Char('o') => {
-                cpu.ps2 = false;
+                //on/off
+                crossterm::event::KeyCode::Char('o') => {
+                    cpu.ps2 = false;
 
 
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
                 }
-            }
-            //Mute
-            crossterm::event::KeyCode::Char('m') => {
-                cpu.ps1 = false;
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                //Mute
+                crossterm::event::KeyCode::Char('m') => {
+                    cpu.ps1 = false;
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
                 }
-            }
-            //Mute/Left
-            crossterm::event::KeyCode::Char('a') => {
-                cpu.pp3 = false;
+                //Mute/Left
+                crossterm::event::KeyCode::Char('a') => {
+                    cpu.pp3 = false;
 
 
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
                 }
-            }
-            //Select/Down
-            crossterm::event::KeyCode::Char('s') => {
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
-                }
+                //Select/Down
+                crossterm::event::KeyCode::Char('s') => {
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
 
-                cpu.pp1 = false;
-            }
-            //Mute/Right
-            crossterm::event::KeyCode::Char('d') => {
-                cpu.pp2 = false;
-
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                    cpu.pp1 = false;
                 }
-            }
-            //Rotate
-            crossterm::event::KeyCode::Char('r') => {
-                cpu.pp0 = false;
+                //Mute/Right
+                crossterm::event::KeyCode::Char('d') => {
+                    cpu.pp2 = false;
 
-                if cpu.ei {
-                    set_stack_cf(cpu);
-                    cpu.pc = 8
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
                 }
+                //Rotate
+                crossterm::event::KeyCode::Char('r') => {
+                    cpu.pp0 = false;
+
+                    if cpu.ei {
+                        set_stack_cf(cpu);
+                        cpu.pc = 8
+                    }
+                }
+                _ => {}
             }
-            _ => {}
         }
     }
 }

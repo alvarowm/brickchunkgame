@@ -43,7 +43,7 @@ fn main() -> Result<()>{
         r3: 0,
         r4: 0,
         acc: 0,
-        timer_counter: 1,
+        timer_counter: 0,
         carry_flag: false,
         pa0: false,
         pa1: false,
@@ -71,10 +71,6 @@ fn main() -> Result<()>{
     //start a thread to read the keyboard
     keyboard_reader::read_input(&kb_mutex);
 
-    //(system clock)/2^4
-    let timer_div:u8 = 16;
-    let mut timer_counter:u8 = 0;
-
     //ui
     stdout().execute(EnterAlternateScreen)?;
     enable_raw_mode()?;
@@ -83,7 +79,7 @@ fn main() -> Result<()>{
 
     //Para uso da lib de som do Holtek,
     //128KHz ou 64KHz sao aceitaveis
-    let interval = Duration::from_micros(10);
+    let interval = Duration::from_micros(1);
     let mut next_time = Instant::now() + interval;
     //main loop
     loop {

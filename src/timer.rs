@@ -18,7 +18,7 @@ pub fn tick(cpu: &mut CPU, rom: [u8; 4096]){
     }
 
     if cpu.timer_enabled{
-        if cpu.timer_counter == 63 {
+        if cpu.timer_counter == 255 {
             cpu.timer_flag = true;
             cpu.timer_counter = 0;
         } else {
