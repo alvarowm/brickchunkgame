@@ -1071,11 +1071,11 @@ pub fn sbc_00001010(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SBC A,[R1R0]");
     cpu.pc += 1;
 
-    cpu.acc = cpu.acc + (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + if cpu.carry_flag {1} else {0});
+    cpu.acc = cpu.acc + (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + if cpu.carry_flag { 1 } else { 0 });
 
     cpu.carry_flag = cpu.acc.bit(4);
 
-    cpu.acc.set_bit(4,false);
+    cpu.acc.set_bit(4, false);
 }
 
 //SOUND A
@@ -1123,8 +1123,7 @@ pub fn sub_010000010000dddd(cpu: &mut CPU, byte1: u8) {
     cpu.acc = cpu.acc + (!(byte1) - 240 + 1);
 
     cpu.carry_flag = cpu.acc.bit(4);
-    cpu.acc.set_bit(4,false);
-
+    cpu.acc.set_bit(4, false);
 }
 
 //SUB A,[R1R0]
@@ -1134,7 +1133,7 @@ pub fn sub_00001011(cpu: &mut CPU, ram: &mut [u8; 256]) {
 
     cpu.acc = cpu.acc + (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + 1);
     cpu.carry_flag = cpu.acc.bit(4);
-    cpu.acc.set_bit(4,false);
+    cpu.acc.set_bit(4, false);
 }
 
 //TIMER OFF

@@ -1,8 +1,7 @@
 use bit::BitIndex;
 use crate::cpu::CPU;
 
-pub fn tick(cpu: &mut CPU, rom: [u8; 4096]){
-
+pub fn tick(cpu: &mut CPU, rom: [u8; 4096]) {
     let instruction = rom[cpu.pc as usize];
 
     if cpu.ei && cpu.timer_flag &&
@@ -17,12 +16,12 @@ pub fn tick(cpu: &mut CPU, rom: [u8; 4096]){
         cpu.timer_flag = false;
     }
 
-    if cpu.timer_enabled{
+    if cpu.timer_enabled {
         if cpu.timer_counter == 255 {
             cpu.timer_flag = true;
             cpu.timer_counter = 0;
         } else {
-            cpu.timer_counter +=1;
+            cpu.timer_counter += 1;
         }
     }
 }

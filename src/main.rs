@@ -5,12 +5,9 @@ use std::thread::sleep;
 use std::time::{Duration, Instant};
 use crossterm::event::KeyEvent;
 use brickchunkgame::cpu::CPU;
-use crate::properties_reader::STATIC_CONFIG;
 use crossterm::{
-    event::{self, KeyCode, KeyEventKind},
     terminal::{
-        disable_raw_mode, enable_raw_mode, EnterAlternateScreen,
-        LeaveAlternateScreen,
+        enable_raw_mode, EnterAlternateScreen,
     },
     ExecutableCommand,
 };
@@ -20,10 +17,9 @@ use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::widgets::{Block, Borders};
 use brickchunkgame::lcd::LcdScreen;
 
-static LCD_SCREEN: Mutex<LcdScreen> = Mutex::new(LcdScreen{ rowsxcolumns: [[false;10];20] });
-fn main() -> Result<()>{
-    //show_logo_version();
+static LCD_SCREEN: Mutex<LcdScreen> = Mutex::new(LcdScreen { rowsxcolumns: [[false; 10]; 20] });
 
+fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
     let rom_buffer = rom_handler::read_rom_from_file(args.to_owned());
@@ -83,12 +79,12 @@ fn main() -> Result<()>{
     let mut next_time = Instant::now() + interval;
     //main loop
     loop {
-        timer::tick(& mut cpu,rom);
+        timer::tick(&mut cpu, rom);
 
-        cpu::check_interrupts(& mut cpu, rom, &kb_mutex);
+        cpu::check_interrupts(&mut cpu, rom, &kb_mutex);
         cpu::exec_instruction(&mut cpu, &mut ram, rom);
 
-        LCD_SCREEN.lock().unwrap().rowsxcolumns =  lcd::map_ram_to_lcd(ram).rowsxcolumns;
+        LCD_SCREEN.lock().unwrap().rowsxcolumns = lcd::map_ram_to_lcd(ram).rowsxcolumns;
 
         terminal.draw(ui).unwrap();
 
@@ -96,13 +92,12 @@ fn main() -> Result<()>{
         next_time += interval;
     }
 
-    stdout().execute(LeaveAlternateScreen)?;
-    disable_raw_mode()?;
-    Ok(())
+    //stdout().execute(LeaveAlternateScreen)?;
+    //disable_raw_mode()?;
+    //Ok(())
 }
 
 fn ui(frame: &mut Frame) {
-
     let main_layout = Layout::new(
         Direction::Horizontal,
         [
@@ -115,8 +110,8 @@ fn ui(frame: &mut Frame) {
 
     for row in main_layout[0].rows() {
         for col in row.columns() {
-            if col.x < 10 && col.y < 20{
-                if LCD_SCREEN.lock().unwrap().rowsxcolumns[col.y as usize][col.x as usize]{
+            if col.x < 10 && col.y < 20 {
+                if LCD_SCREEN.lock().unwrap().rowsxcolumns[col.y as usize][col.x as usize] {
                     let cell = buffer.get_mut(col.x, col.y);
                     cell.set_symbol("▮");
                 } else {
@@ -124,8 +119,6 @@ fn ui(frame: &mut Frame) {
                     cell.set_symbol("▯");
                 }
             }
-
-
         }
     }
 
@@ -133,7 +126,6 @@ fn ui(frame: &mut Frame) {
         Block::new().borders(Borders::NONE),
         main_layout[0],
     );
-
 }
 
 
