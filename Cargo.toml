@@ -1,3 +1,8 @@
+[build]
+rustflags = ["-C", "target-cpu=native"]
+[profile.release]
+codegen-units = 1
+lto = "fat"
 [package]
 name = "brickchunkgame"
 version = "0.0.1"
