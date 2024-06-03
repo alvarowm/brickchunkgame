@@ -151,14 +151,10 @@ pub fn adc_00001000(cpu: &mut CPU, ram: &[u8; 256]) {
     //println!("ADC A,[R1R0]");
     cpu.pc += 1;
 
-    let resultado: u8 = cpu.acc + ram[((cpu.r1 << 4) + cpu.r0) as usize] + (if cpu.carry_flag { 1 } else { 0 });
+    cpu.acc+= ram[((cpu.r1 << 4) + cpu.r0) as usize] + (if cpu.carry_flag { 1 } else { 0 });
+    cpu.carry_flag = cpu.acc.bit(4);
+    cpu.acc.set_bit(4, false);
 
-    cpu.acc = 0;
-    cpu.acc.set_bit(0, resultado.bit(0));
-    cpu.acc.set_bit(1, resultado.bit(1));
-    cpu.acc.set_bit(2, resultado.bit(2));
-    cpu.acc.set_bit(3, resultado.bit(3));
-    cpu.carry_flag = resultado.bit(4);
 }
 
 //ADD A,XH
@@ -166,14 +162,10 @@ pub fn add_010000000000dddd(cpu: &mut CPU, data: u8) {
     //println!("ADD A,XH");
     cpu.pc += 2;
 
-    let resultado = cpu.acc + data;
+    cpu.acc += data;
 
-    cpu.acc = 0;
-    cpu.acc.set_bit(0, resultado.bit(0));
-    cpu.acc.set_bit(1, resultado.bit(1));
-    cpu.acc.set_bit(2, resultado.bit(2));
-    cpu.acc.set_bit(3, resultado.bit(3));
-    cpu.carry_flag = resultado.bit(4);
+    cpu.carry_flag = cpu.acc.bit(4);
+    cpu.acc.set_bit(4, false);
 }
 
 //ADD A,[R1R0]
@@ -181,14 +173,10 @@ pub fn add_00001001(cpu: &mut CPU, ram: &[u8; 256]) {
     //println!("ADD A,[R1R0]");
     cpu.pc += 1;
 
-    let resultado = cpu.acc + ram[((cpu.r1 << 4) + cpu.r0) as usize];
+    cpu.acc += ram[((cpu.r1 << 4) + cpu.r0) as usize];
 
-    cpu.acc = 0;
-    cpu.acc.set_bit(0, resultado.bit(0));
-    cpu.acc.set_bit(1, resultado.bit(1));
-    cpu.acc.set_bit(2, resultado.bit(2));
-    cpu.acc.set_bit(3, resultado.bit(3));
-    cpu.carry_flag = resultado.bit(4);
+    cpu.carry_flag = cpu.acc.bit(4);
+    cpu.acc.set_bit(4, false);
 }
 
 //AND A,XH
@@ -203,8 +191,7 @@ pub fn and_00011010(cpu: &mut CPU, ram: &[u8; 256]) {
     //println!("AND A,[R1R0]");
     cpu.pc += 1;
 
-    let data = ram[((cpu.r1 << 4) + cpu.r0) as usize];
-    cpu.acc &= data;
+    cpu.acc &= ram[((cpu.r1 << 4) + cpu.r0) as usize];
 }
 
 
@@ -1071,7 +1058,7 @@ pub fn sbc_00001010(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SBC A,[R1R0]");
     cpu.pc += 1;
 
-    cpu.acc = cpu.acc + (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + if cpu.carry_flag { 1 } else { 0 });
+    cpu.acc += (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + if cpu.carry_flag { 1 } else { 0 });
 
     cpu.carry_flag = cpu.acc.bit(4);
 
@@ -1120,7 +1107,7 @@ pub fn sub_010000010000dddd(cpu: &mut CPU, byte1: u8) {
     //println!("SUB A,XH");
     cpu.pc += 2;
 
-    cpu.acc = cpu.acc + (!(byte1) - 240 + 1);
+    cpu.acc += (!(byte1) - 240 + 1);
 
     cpu.carry_flag = cpu.acc.bit(4);
     cpu.acc.set_bit(4, false);
@@ -1131,7 +1118,7 @@ pub fn sub_00001011(cpu: &mut CPU, ram: &mut [u8; 256]) {
     //println!("SUB A,[R1R0]");
     cpu.pc += 1;
 
-    cpu.acc = cpu.acc + (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + 1);
+    cpu.acc += (!(ram[((cpu.r1 << 4) + cpu.r0) as usize]) - 240 + 1);
     cpu.carry_flag = cpu.acc.bit(4);
     cpu.acc.set_bit(4, false);
 }
